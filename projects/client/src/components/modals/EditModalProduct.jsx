@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { editProduct } from "../../features/products/adminProductSlice";
 
 const EditModalProduct = ({
   closeEditModal,
-  handleEdit,
   editItemId,
   categories,
-  openEditModal, // Add this line
   products,
 }) => {
   const dispatch = useDispatch();
@@ -24,7 +21,6 @@ const EditModalProduct = ({
     const selectedProduct = products.find(
       (product) => product.id_product === editItemId
     );
-
     if (selectedProduct) {
       setName(selectedProduct.name);
       setPrice(selectedProduct.price);
@@ -34,7 +30,6 @@ const EditModalProduct = ({
       setImage(selectedProduct.image_url);
       setImagePreview(`http://localhost:8000${selectedProduct.image_url}`); // Set initial image preview
     }
-    console.log(image, "urlimg");
   }, [editItemId, products]);
 
   const handleImageChange = (e) => {

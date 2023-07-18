@@ -16,7 +16,7 @@ const makeRequest = async (url) => {
     });
     return response.data.rajaongkir.results;
   } catch (error) {
-    console.error("Error making request to RAJA ONGKIR API: ", error);
+    // console.error("Error making request to RAJA ONGKIR API: ", error);
     throw error;
   }
 };
@@ -36,7 +36,6 @@ const getCitiesByProvince = async (req, res) => {
     const { provinceId } = req.params;
     const url = `${BASE_URL}/city?province=${provinceId}`;
     const cities = await makeRequest(url);
-    console.log(cities, "cities");
     res.status(200).json(cities);
   } catch (error) {
     res.status(500).json({ error: "Error fetching cities" });

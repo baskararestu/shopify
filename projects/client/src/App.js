@@ -1,6 +1,9 @@
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import LoginAdmin from "./pages/LoginAdmin";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import showToastProtectedRoutes from "./effects/showToastProtectedRoutes";
 import setLastVisitedPage from "./effects/setLastVisitedPage";
 import checkTokenExpiration from "./effects/checkTokenExpiration";
@@ -13,25 +16,26 @@ import Navbar from "./components/Navbar/Navbar";
 import DashboardAdmin from "./pages/DashboardAdmin";
 import ProductsAdmin from "./pages/ProductsAdmin";
 import WarehousesAdmin from "./pages/WarehousesAdmin";
-import AdminCategory from "./pages/AdminCategory";
-import StocksAdmin from "./pages/StocksAdmin";
-import StockMutationAdmin from "./pages/StockMutationAdmin";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import ResetPassword from "./pages/ResetPassword";
-import ForgetPassword from "./pages/ForgetPassword";
-import Profiling from "./pages/Profiling";
-import Cart from "./pages/Cart";
-import OrderList from "./pages/OrderList";
-import CreateOrder from "./pages/CreateOrder";
-import Payment from "./pages/Payment";
+import ReportingAdmin from "./pages/ReportingAdmin";
+import CategoriesAdmin from "./pages/CategoriesAdmin";
+import ReportingAdminStock from "./pages/ReportingAdminStock";
 import LandingPage from "./pages/LandingPage";
-import ProductCategory from "./pages/ProductCategory";
 import ProductDetail from "./pages/ProductDetail";
 import Products from "./pages/Products";
 import Verification from "./pages/Verification";
 import { fetchItemsCart } from "./features/carts/cartActions";
 import OrderListAdmin from "./pages/OrderListAdmin";
+import Cart from "./pages/Cart";
+import OrderList from "./pages/OrderList";
+import CreateOrder from "./pages/CreateOrder";
+import Payment from "./pages/Payment";
+import StocksAdmin from "./pages/StocksAdmin";
+import StockMutationAdmin from "./pages/StockMutationAdmin";
+import ResetPassword from "./pages/ResetPassword";
+import ForgetPassword from "./pages/ForgetPassword";
+import Profiling from "./pages/Profiling";
+import { getAllProductCategories } from "./features/categories/ProductCategoriesSlice";
+import { getProfile } from "./features/ProfileSlice";
 
 function App() {
   const location = useLocation();
@@ -39,6 +43,10 @@ function App() {
   const navigate = useNavigate();
   const userToken = localStorage.getItem("user_token");
   const adminToken = localStorage.getItem("admin_token");
+  const adminRole = useSelector((state) =>
+    state.admins.admin?.role?.toLowerCase()
+  );
+
   const [showToast, setShowToast] = useState(false);
   const [showNavbar, setShowNavbar] = useState(false);
 
@@ -76,23 +84,27 @@ function App() {
   useEffect(() => {
     if (userToken) {
       dispatch(fetchItemsCart());
+      dispatch(getProfile());
     }
   }, [userToken, dispatch]);
+
+  useEffect(() => {
+    dispatch(getAllProductCategories());
+  }, [dispatch]);
 
   return (
     <div>
       {showNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/products/:category" element={<ProductCategory />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/verification/" element={<Verification />} />
         <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/products/:category?" element={<Products />} />
         {userToken === null ? (
           <>
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/login-admin" element={<LoginAdmin />} />
             <Route path="/reset-password/" element={<ResetPassword />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
           </>
@@ -109,16 +121,24 @@ function App() {
           <>
             <Route path="/admin-dashboard" element={<DashboardAdmin />} />
             <Route path="/admin-products" element={<ProductsAdmin />} />
-            <Route path="/admin-warehouses" element={<WarehousesAdmin />} />
-            <Route path="/admin-categories" element={<AdminCategory />} />
+            {adminRole === "super admin" && (
+              <Route path="/admin-warehouses" element={<WarehousesAdmin />} />
+            )}
+            <Route path="/admin-categories" element={<CategoriesAdmin />} />
             <Route path="/admin-stocks" element={<StocksAdmin />} />
             <Route
               path="/admin-stock-mutation"
               element={<StockMutationAdmin />}
             />
             <Route path="/admin-order-list" element={<OrderListAdmin />} />
+            <Route path="/admin-reporting" element={<ReportingAdmin />} />
+            <Route
+              path="/admin-reporting-stock"
+              element={<ReportingAdminStock />}
+            />
           </>
         )}
+        <Route path="/admin-login" element={<LoginAdmin />} />
       </Routes>
     </div>
   );

@@ -11,8 +11,8 @@ router.post("/edit-data", verifyToken, userProfileController.editUserProfile);
 router.post(
   "/upload",
   verifyToken,
-  upload.single("file"),
-  userProfileController.uploadProfilePicture
+  upload.single("image_url"),
+  userProfileController.addProfilePic
 );
 router.post("/add-address", verifyToken, userProfileController.addAddress);
 router.post(
@@ -26,5 +26,11 @@ router.delete(
   userProfileController.deleteAddress
 );
 router.get("/get-address", verifyToken, userProfileController.getUserAddress);
+
+router.get(
+  "/set-primary-address/:id",
+  verifyToken,
+  userProfileController.setPrimaryAddress
+);
 
 module.exports = router;

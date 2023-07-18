@@ -89,8 +89,11 @@ module.exports = {
     const { email, password } = req.body;
     try {
       const checkAdminQuery = `
-        SELECT * FROM admins WHERE email = ${db.escape(email)}
-      `;
+      SELECT admins.*, roles.name AS role_name
+      FROM admins
+      INNER JOIN roles ON admins.id_role = roles.id_role
+      WHERE email = ${db.escape(email)}
+    `;
       const existingAdmin = await query(checkAdminQuery);
 
       if (existingAdmin.length === 0) {
@@ -109,21 +112,134 @@ module.exports = {
         });
         return;
       }
-      const token = jwt.sign(
-        { id: admin.id_admin, email: admin.email, role: admin.id_role },
-        env.JWT_SECRET,
-        { expiresIn: "1h" }
-      );
 
+      const payload = {
+        id: admin.id_admin,
+        role: admin.role_name.toLowerCase(),
+      };
+
+      const expiresIn = 60 * 60; // Set the token expiration time to 1 hour
+      const expirationTimestamp = Math.floor(Date.now() / 1000) + expiresIn; // Calculate the expiration timestamp (in seconds)
+      const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn });
       res.status(200).send({
         token,
-        message: "Admins login successful",
+        message: "Admin login successful",
+        data: {
+          id: admin.id_admin,
+          email: admin.email,
+          name: admin.name,
+          role: admin.role_name,
+          expToken: expirationTimestamp,
+        },
       });
     } catch (error) {
       console.error("Error during admin login: ", error);
       res.status(500).send({
         error: "An error occurred during admin login",
       });
+    }
+  },
+  getAllUserForAdmin: async (req, res) => {
+    try {
+      const getAllUser = await query(`SELECT * FROM users`);
+      return res.status(200).send(getAllUser);
+    } catch (error) {
+      return res.status(error.status || 500).send(error);
+    }
+  },
+
+  getAllAdmins: async (req, res) => {
+    try {
+      const getAllAdmins = await query(
+        `select admins.id_admin, admins.email, admins.name, admins.id_role, warehouses.name warehouse_name
+        from admins 
+        left join warehouses on admins.id_admin = warehouses.id_admin`
+      );
+      return res.status(200).send(getAllAdmins);
+    } catch (error) {
+      return res.status(error.status || 500).send(error);
+    }
+  },
+
+  editWarehouseAdmin: async (req, res) => {
+    try {
+      const id_admin = req.params.id;
+
+      let adminDataUpdate = [];
+      for (let prop in req.body) {
+        adminDataUpdate.push(`${prop} = ${db.escape(req.body[prop])}`);
+      }
+      const editAdminQuery = `UPDATE admins SET ${adminDataUpdate} WHERE id_admin=${id_admin}`;
+
+      const editAdmin = await query(editAdminQuery);
+
+      const getAdminQuery = `SELECT * FROM admins WHERE id_admin = ${db.escape(
+        id_admin
+      )}`;
+      const getAdmin = await query(getAdminQuery);
+
+      return res.status(200).send({
+        message: `Warehouse admin ID ${id_admin} edited successfully`,
+      });
+    } catch (error) {
+      return res.status(error.status || 500).send(error);
+    }
+  },
+
+  assignWarehouseAdmin: async (req, res) => {
+    try {
+      const id_admin = req.params.id;
+
+      const { warehouse_name } = req.body;
+      const isAdminAssigned = await query(
+        `select id_warehouse, w.name warehouse_name from warehouses w WHERE id_admin=${id_admin}`
+      );
+      if (isAdminAssigned.length > 0) {
+        const deleteAssignmentQuery = `UPDATE warehouses SET id_admin = null WHERE id_admin=${id_admin}`;
+        const deleteAssignment = await query(deleteAssignmentQuery);
+        const assignAdminQuery = `UPDATE warehouses SET id_admin = ${id_admin} WHERE name='${warehouse_name}'`;
+        const assignAdmin = await query(assignAdminQuery);
+        const getAdminAssignQuery = `SELECT * FROM warehouses WHERE name = '${warehouse_name}'`;
+        const getAdminAssign = await query(getAdminAssignQuery);
+        return res
+          .status(200)
+          .send({
+            message: `WH admin is unassigned to its previous warehouse. Now assigned to ${warehouse_name}`,
+          });
+      }
+      const assignAdminQuery = `UPDATE warehouses SET id_admin = ${id_admin} WHERE name='${warehouse_name}'`;
+
+      const assignAdmin = await query(assignAdminQuery);
+
+      const getAdminAssignQuery = `SELECT * FROM warehouses WHERE name = '${warehouse_name}'`;
+      const getAdminAssign = await query(getAdminAssignQuery);
+
+      return res
+        .status(200)
+        .send({ message: `Warehouse admin assigned to ${warehouse_name}` });
+    } catch (error) {
+      return res.status(error.status || 500).send(error);
+    }
+  },
+
+  deleteWarehouseAdmin: async (req, res) => {
+    try {
+      const id_admin = req.params.id;
+
+      const deleteAdminQuery = `DELETE FROM admins WHERE id_admin=${db.escape(
+        id_admin
+      )}`;
+
+      const deleteAdmin = await query(deleteAdminQuery);
+
+      const getAdminQuery = `SELECT * FROM admins`;
+      const getAdmin = await query(getAdminQuery);
+
+      return res
+        .status(200)
+        .send({ message: `Admin ID ${id_admin} is now deleted` });
+    } catch (error) {
+      return res.status(error.status || 500).send(error);
     }
   },
 };

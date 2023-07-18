@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewStock, fetchStockData } from "../../features/stocks/stocksSlice";
-import { fetchWarehouses } from "../../features/warehouses/warehouseSlice";
+import {
+  fetchAllWarehouseData,
+  fetchWarehouses,
+} from "../../features/warehouses/warehouseSlice";
 import { fetchAllAdminProducts } from "../../features/products/adminProductSlice";
 
 const CreateModalStock = ({ closeCreateModal }) => {
@@ -11,12 +14,12 @@ const CreateModalStock = ({ closeCreateModal }) => {
   const [quantity, setQuantity] = useState("");
   const products = useSelector((state) => state.adminProducts.products);
   const warehouses = useSelector((state) => state.warehouses.warehouse);
+
   const handleWarehouseChange = (e) => {
     const selectedWarehouseId = e.target.value;
     setWarehouseId(selectedWarehouseId);
     setProductId("");
   };
-
   const handleProductChange = (e) => {
     const selectedProductId = e.target.value;
     setProductId(selectedProductId);
@@ -24,7 +27,6 @@ const CreateModalStock = ({ closeCreateModal }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(warehouseId, "wID", productId, "pID");
     dispatch(addNewStock(warehouseId, productId, parseInt(quantity)));
     dispatch(fetchStockData());
     closeCreateModal();
@@ -32,9 +34,13 @@ const CreateModalStock = ({ closeCreateModal }) => {
 
   useEffect(() => {
     dispatch(fetchAllAdminProducts());
-    dispatch(fetchWarehouses());
+    dispatch(fetchAllWarehouseData());
   }, [dispatch]);
-
+  useEffect(() => {
+    if (warehouses.length === 1) {
+      setWarehouseId(warehouses[0].id_warehouse);
+    }
+  }, [warehouses]);
   return (
     <div className="modal" id="create_modal">
       <div className="modal-box">
@@ -49,16 +55,25 @@ const CreateModalStock = ({ closeCreateModal }) => {
               onChange={handleWarehouseChange}
               className="select select-bordered"
               required
+              disabled={warehouses.length === 1}
             >
-              <option value="">Select warehouse</option>
-              {warehouses.map((warehouse) => (
-                <option
-                  key={warehouse.id_warehouse}
-                  value={warehouse.id_warehouse}
-                >
-                  {warehouse.name}
+              {warehouses.length === 1 ? (
+                <option value={warehouses[0].id_warehouse} disabled>
+                  {warehouses[0].name}
                 </option>
-              ))}
+              ) : (
+                <>
+                  <option value="">Select warehouse</option>
+                  {warehouses.map((warehouse) => (
+                    <option
+                      key={warehouse.id_warehouse}
+                      value={warehouse.id_warehouse}
+                    >
+                      {warehouse.name}
+                    </option>
+                  ))}
+                </>
+              )}
             </select>
           </div>
           {warehouseId && (

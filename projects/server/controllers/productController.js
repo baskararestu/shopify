@@ -25,39 +25,64 @@ module.exports = {
 
   getAllProducts: async (req, res) => {
     try {
-      const { offset, limit, sort, filter } = req.query;
-
-      let countProductQuery = `SELECT COUNT(*) AS total FROM products`;
-      let productsQuery = `
-        SELECT p.*, SUM(s.total_stock) AS total_stock
-        FROM products p
-        JOIN stocks s ON p.id_product = s.id_product
-        WHERE 1=1
-        GROUP BY p.id_product
-      `;
-
-      if (filter) {
-        productsQuery += ` AND name LIKE '%${filter}%'`;
-        countProductQuery += ` AND name LIKE '%${filter}%'`;
+      let { page, search, sort, category } = req.query;
+      const itemsPerPage = 10;
+      page = parseInt(page);
+      if (isNaN(page) || page < 1) {
+        page = 1;
       }
 
-      if (sort === "asc") {
+      const offset = (page - 1) * itemsPerPage;
+
+      let countQuery = `SELECT COUNT(*) AS total FROM products`;
+
+      let productsQuery = `SELECT p.*,c.name as category_name, SUM(s.total_stock) AS total_stock FROM products p JOIN stocks s ON p.id_product = s.id_product JOIN categories c ON p.id_category = c.id_category `;
+
+      if (category !== undefined && category !== "") {
+        productsQuery += ` WHERE p.id_category = ${db.escape(category)}`;
+      }
+
+      if (search) {
+        search = search.toLowerCase();
+        productsQuery += ` WHERE LOWER(p.name) LIKE '%${search}%'`;
+      }
+
+      productsQuery += `GROUP BY p.id_product`;
+
+      if (sort === "lowest") {
         productsQuery += ` ORDER BY price ASC`;
-      } else if (sort === "desc") {
+      } else if (sort === "highest") {
         productsQuery += ` ORDER BY price DESC`;
+      } else if (sort === "a-z") {
+        productsQuery += ` ORDER BY p.name ASC`;
+      } else if (sort === "z-a") {
+        productsQuery += ` ORDER BY p.name DESC`;
       }
 
-      productsQuery += ` LIMIT ${limit} OFFSET ${offset}`;
+      productsQuery += `  LIMIT ${itemsPerPage} OFFSET ${offset}`;
 
-      const products = await query(productsQuery);
-      parseTotalStock(products);
-      const totalItems = await query(countProductQuery);
+      if (search) {
+        countQuery = `SELECT COUNT(*) AS total
+        FROM products
+        WHERE LOWER(name) LIKE '%${search.toLowerCase()}%'`;
+      } else if (category) {
+        countQuery = `SELECT COUNT(*) AS total FROM products p JOIN categories c ON p.id_category = c.id_category WHERE c.name = ${db.escape(
+          category
+        )}`;
+      }
 
-      return res.status(200).send({
-        data: products,
-        totalPages: Math.ceil(totalItems[0].total / limit),
-        totalItems: totalItems[0].total,
-      });
+      const productsList = await query(productsQuery);
+      parseTotalStock(productsList);
+
+      const [products, countResult] = await Promise.all([
+        query(productsQuery),
+        query(countQuery),
+      ]);
+
+      const totalItems = countResult[0].total;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+      return res.status(200).send({ products, totalPages, itemsPerPage });
     } catch (error) {
       return res.status(error.statusCode || 500).send(error);
     }

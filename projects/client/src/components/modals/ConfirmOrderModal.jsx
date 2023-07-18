@@ -2,6 +2,10 @@ import axios from "axios";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { fetchOrderPaymentList } from "../../features/orders/orderListAdminSlice";
+import {
+  showErrorToast,
+  showSuccessToast,
+} from "../CustomToast/CustomNotification";
 
 function ConfirmOrderModal({ selectedId }) {
   const dispatch = useDispatch();
@@ -10,10 +14,11 @@ function ConfirmOrderModal({ selectedId }) {
       let response = await axios.post(
         `http://localhost:8000/api/admins/orders/payment/confirm?id_order=${selectedId}`
       );
-      console.log(response);
       dispatch(fetchOrderPaymentList());
+      showSuccessToast(response.data.message);
     } catch (error) {
       console.log(error);
+      showErrorToast(error.response.data.message);
     }
   };
   return (

@@ -1,15 +1,32 @@
+const { db, query } = require("../database");
+
 module.exports = {
-  fetchStocksQuery: (search, sort, offset, itemsPerPage) => {
+  getWarehouseId: async (adminId) => {
+    const warehouseQuery = `
+    SELECT *
+    FROM warehouses
+    WHERE id_admin = '${adminId}'
+  `;
+    const warehouseResult = await query(warehouseQuery);
+    return warehouseResult.length > 0 ? warehouseResult[0].id_warehouse : null;
+  },
+
+  fetchStocksQuery: (search, sort, offset, itemsPerPage, warehouseId, role) => {
     let stocksQuery = `
       SELECT s.*, p.name AS product_name, w.name AS warehouse_name
       FROM stocks s
       INNER JOIN products p ON s.id_product = p.id_product
       INNER JOIN warehouses w ON s.id_warehouse = w.id_warehouse
+      WHERE 1=1
     `;
+    if (role === "warehouse admin") {
+      // Render orders only from users in the selected warehouse
+      stocksQuery += ` AND w.id_warehouse = '${warehouseId}'`;
+    }
 
     if (search) {
       search = search.toLowerCase();
-      stocksQuery += ` WHERE LOWER(p.name) LIKE '%${search}%' OR LOWER(w.name) LIKE '%${search}%'`;
+      stocksQuery += ` AND LOWER(p.name) LIKE '%${search}%' OR LOWER(w.name) LIKE '%${search}%'`;
     }
 
     if (sort === "a-z") {
@@ -36,17 +53,20 @@ module.exports = {
     return stocksQuery;
   },
 
-  countStocksQuery: (search) => {
+  countStocksQuery: (search, warehouseId, role) => {
     let countQuery = `
       SELECT COUNT(*) AS total
       FROM stocks s
       INNER JOIN products p ON s.id_product = p.id_product
-      INNER JOIN warehouses w ON s.id_warehouse = w.id_warehouse
+      INNER JOIN warehouses w ON s.id_warehouse = w.id_warehouse WHERE 1=1
     `;
-
+    if (role === "warehouse admin") {
+      // Render orders only from users in the selected warehouse
+      countQuery += ` AND w.id_warehouse = '${warehouseId}'`;
+    }
     if (search) {
       search = search.toLowerCase();
-      countQuery += ` WHERE LOWER(p.name) LIKE '%${search}%' OR LOWER(w.name) LIKE '%${search}%'`;
+      countQuery += ` AND LOWER(p.name) LIKE '%${search}%' OR LOWER(w.name) LIKE '%${search}%'`;
     }
 
     return countQuery;
@@ -77,7 +97,15 @@ module.exports = {
     `;
   },
 
-  checkStockQuery: (id_product, id_warehouse) => {
+  checkStockQuery: (id_stock) => {
+    return `
+    SELECT id_stock, total_stock
+    FROM stocks
+    WHERE id_stock = ${db.escape(id_stock)}
+  `;
+  },
+
+  checkProductQuery: (id_product, id_warehouse) => {
     return `
       SELECT id_stock, total_stock
       FROM stocks

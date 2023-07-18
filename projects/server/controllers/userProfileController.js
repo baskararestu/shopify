@@ -3,12 +3,19 @@ require("dotenv").config({
 });
 const { db, query } = require("../database");
 const { getIdFromToken } = require("../helper/jwt-payload");
+const {
+  getCoordinates,
+  // checkProvinceAndCity,
+} = require("../helper/setAddressHelper");
+const {
+  validateImageSize,
+  validateImageExtension,
+} = require("../helper/imageValidatorHelper");
 
 module.exports = {
   getUserProfile: async (req, res) => {
     try {
       const idUser = req.user.id;
-      console.log(idUser, "userid");
       const getUserProfile = await query(
         `SELECT * FROM users WHERE id_user = ${db.escape(idUser)}`
       );
@@ -30,7 +37,6 @@ module.exports = {
       }
 
       const editUserQuery = `UPDATE users SET ${dataUpdate} WHERE id_user=${idUser}`;
-      console.log(editUserQuery);
 
       const editUser = await query(editUserQuery);
 
@@ -39,7 +45,7 @@ module.exports = {
       )}`;
       const getUser = await query(getUserQuery);
 
-      return res.status(200).send(getUser);
+      return res.status(200).send({ message: "User Profile Edited", getUser });
     } catch (error) {
       return res.status(error.status || 500).send(error);
     }
@@ -61,23 +67,69 @@ module.exports = {
     }
   },
 
+  addProfilePic: async (req, res) => {
+    try {
+      const idUser = req.user.id;
+      const { file } = req;
+      if (!req.file) {
+        return res.status(400).send("No image file provided");
+      }
+      let image_url = "";
+      image_url = file ? "/" + file.filename : null;
+      if (!file) {
+        return res.status(400).send("No image file provided");
+      }
+      if (!validateImageSize(file)) {
+        return res.status(400).send("File size exceeds the limit");
+      }
+      if (!validateImageExtension(file)) {
+        return res.status(400).send("Invalid file extension");
+      }
+
+      let response = await query(
+        `UPDATE users SET image_path=${db.escape(
+          image_url
+        )} WHERE id_user=${db.escape(idUser)}`
+      );
+
+      let getUpdate = await query(
+        `select * from users where id_user=${db.escape(idUser)}`
+      );
+
+      return res.status(200).send({
+        message: "Update profile picture success",
+        user: getUpdate[0],
+      });
+    } catch (error) {
+      return res.status(error.statusCode || 500).send(error);
+    }
+  },
+
   addAddress: async (req, res) => {
     try {
       const idUser = req.user.id;
-      const { address, city, province, postal_code, is_primary } = req.body;
-      let addAddressQuery = `INSERT INTO addresses VALUES (null, 
-        ${db.escape(idUser)}, 
-        ${db.escape(address)}, 
-        ${db.escape(city)}, 
-        ${db.escape(province)}, 
-        ${db.escape(postal_code)},
-        ${db.escape(is_primary)}
-      )`;
-      console.log(addAddressQuery);
+      let { address, city, province, postal_code } = req.body;
+
+      const result = await getCoordinates(address, city, province, postal_code);
+      if (!result) {
+        throw new Error("Coordinates not found");
+      }
+      const { latitude, longitude } = result;
+
+      const addAddressQuery = `
+      INSERT INTO addresses (id_user,address, city, province, postal_code, is_primary,latitude,longitude)
+      VALUES (${db.escape(idUser)},${db.escape(address)}, ${db.escape(
+        city
+      )}, ${db.escape(province)}, 
+      ${db.escape(postal_code)}, false,${db.escape(latitude)},${db.escape(
+        longitude
+      )})`;
       let addAddressResult = await query(addAddressQuery);
-      res
-        .status(200)
-        .send({ data: addAddressResult, message: "Add Address Success" });
+
+      res.status(201).send({
+        data: addAddressResult,
+        message: "Add Address Success",
+      });
     } catch (error) {
       return res.status(error.status || 500).send(error);
     }
@@ -85,16 +137,24 @@ module.exports = {
 
   editAddress: async (req, res) => {
     try {
-      console.log(req.params);
-      const idUser = req.user.id;
       const id_address = req.params.id;
-      let addressDataUpdate = [];
-      for (let prop in req.body) {
-        addressDataUpdate.push(`${prop} = ${db.escape(req.body[prop])}`);
+      const { address, city, province, postal_code } = req.body;
+
+      const result = await getCoordinates(address, city, province, postal_code);
+
+      if (!result) {
+        throw new Error("Coordinates not found");
       }
 
-      const editAddressQuery = `UPDATE addresses SET ${addressDataUpdate} WHERE id_address=${id_address}`;
-      console.log(editAddressQuery);
+      const { latitude, longitude } = result;
+      const editAddressQuery = `UPDATE addresses
+      SET address = ${db.escape(address)},
+      city = ${db.escape(city)},
+      province = ${db.escape(province)}, postal_code = ${db.escape(
+        postal_code
+      )},
+      latitude = ${db.escape(latitude)}, longitude = ${db.escape(longitude)}
+      WHERE id_address = ${db.escape(id_address)}`;
 
       const editAddress = await query(editAddressQuery);
 
@@ -115,22 +175,49 @@ module.exports = {
       let deleteAddressQuery = `DELETE FROM addresses WHERE id_address=${db.escape(
         id_address
       )};`;
-      console.log(deleteAddressQuery);
       const execute_delete = await query(deleteAddressQuery);
       return res.status(200).send("Delete Address Succeed");
     } catch (error) {
-      return res.status(error.status || 500).send(error);
+      console.log(error);
+      return res.status(error.status || 500).send("babi");
     }
   },
 
   getUserAddress: async (req, res) => {
     try {
       const idUser = getIdFromToken(req, res);
-      console.log(idUser, "getaddress");
       const getUserAddresses = await query(
-        `SELECT * FROM addresses WHERE id_user = ${db.escape(idUser)}`
+        `SELECT * , 
+        case when is_primary = 1 then "Primary"
+        else "Non-Primary" end as is_primary2
+        FROM addresses WHERE id_user = ${db.escape(
+          idUser
+        )} order by is_primary desc`
       );
       return res.status(200).send(getUserAddresses);
+    } catch (error) {
+      return res.status(error.status || 500).send(error);
+    }
+  },
+
+  setPrimaryAddress: async (req, res) => {
+    try {
+      const idUser = req.user.id;
+      const id_address = req.params.id;
+
+      const hapusPrevPrimaryQuery = `UPDATE addresses SET is_primary = 0 WHERE id_user = ${idUser}`;
+      const hapusPrevPrimary = await query(hapusPrevPrimaryQuery);
+
+      const setPrimaryQuery = `UPDATE addresses SET is_primary = 1 WHERE id_address=${id_address}`;
+
+      const setPrimary = await query(setPrimaryQuery);
+
+      const getAddressQuery = `SELECT * FROM addresses WHERE id_address = ${db.escape(
+        id_address
+      )} order by is_primary desc`;
+      const getAddress = await query(getAddressQuery);
+
+      return res.status(200).send(getAddress);
     } catch (error) {
       return res.status(error.status || 500).send(error);
     }

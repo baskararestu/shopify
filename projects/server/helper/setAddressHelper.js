@@ -32,7 +32,6 @@ module.exports = {
     const apiKey = env.RAJA_ONGKIR_API_KEY;
 
     try {
-      // Make a GET request to retrieve the list of provinces
       const provinceResponse = await axios.get(
         "https://api.rajaongkir.com/starter/province",
         {
@@ -51,7 +50,6 @@ module.exports = {
         throw new Error("Province not found");
       }
 
-      // Make a GET request to retrieve the list of cities within the selected province
       const cityResponse = await axios.get(
         `https://api.rajaongkir.com/starter/city?province=${selectedProvince.province_id}`,
         {
