@@ -1,9 +1,7 @@
-require("dotenv").config({
-  path: ".env.local",
-});
+const { join } = require("path");
+require("dotenv").config({ path: join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
-const { join } = require("path");
 const {
   userRoutes,
   cartRoutes,
