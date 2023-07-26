@@ -18,7 +18,7 @@ function StockReport() {
         const token = localStorage.admin_token;
         if (token) {
           let response = await axios.get(
-            `http://localhost:8000/api/warehouses/`,
+            `${process.env.REACT_APP_API_BASE_URL}/warehouses/`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }

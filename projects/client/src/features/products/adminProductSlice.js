@@ -66,7 +66,7 @@ export function fetchAdminProducts(
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/admins/products/?page=${page}&search=${search}&sort=${sort}&category=${category}`,
+        `${process.env.REACT_APP_API_BASE_URL}/admins/products/?page=${page}&search=${search}&sort=${sort}&category=${category}`,
         {
           headers: {
             Authorization: `Bearer ${adminToken}`,
@@ -90,7 +90,7 @@ export function fetchAllAdminProducts() {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/admins/products/all",
+        `${process.env.REACT_APP_API_BASE_URL}/admins/products/all`,
         {
           headers: {
             Authorization: `Bearer ${adminToken}`,
@@ -111,7 +111,7 @@ export function editProduct(id, productData) {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/admins/products/${id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/admins/products/${id}`,
         productData,
         {
           headers: {
@@ -136,7 +136,7 @@ export function deleteProducts(id_product) {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.delete(
-        `http://localhost:8000/api/admins/products/${id_product}`,
+        `${process.env.REACT_APP_API_BASE_URL}/admins/products/${id_product}`,
         {
           headers: { Authorization: `Bearer ${adminToken}` },
         }
@@ -153,7 +153,7 @@ export function addNewProduct(productData) {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/admins/products/",
+        `${process.env.REACT_APP_API_BASE_URL}/admins/products/`,
         productData,
         {
           headers: { Authorization: `Bearer ${adminToken}` },

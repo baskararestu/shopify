@@ -34,7 +34,7 @@ export function loginAdmin(data, callback) {
     dispatch(setIsLoading(true));
     try {
       let response = await axios.post(
-        "http://localhost:8000/api/admins/login",
+        `${process.env.REACT_APP_API_BASE_URL}/admins/login`,
         data
       );
 

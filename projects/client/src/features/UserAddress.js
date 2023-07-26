@@ -26,7 +26,7 @@ export function getAddress() {
       const token = localStorage.user_token;
       if (token) {
         let response = await axios.get(
-          `http://localhost:8000/api/user-profile/get-address`,
+          `${process.env.REACT_APP_API_BASE_URL}/user-profile/get-address`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -44,7 +44,7 @@ export function addAddress(addressData) {
     const token = localStorage.getItem("user_token");
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/user-profile/add-address",
+        `${process.env.REACT_APP_API_BASE_URL}/user-profile/add-address`,
         addressData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -66,7 +66,7 @@ export function deleteAddress(id_address) {
     const token = localStorage.getItem("user_token");
     try {
       const response = await axios.delete(
-        `http://localhost:8000/api/user-profile/delete-address/${id_address}`,
+        `${process.env.REACT_APP_API_BASE_URL}/user-profile/delete-address/${id_address}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -83,7 +83,7 @@ export function setPrimaryAddress(id_address) {
     const token = localStorage.getItem("user_token");
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/user-profile/set-primary-address/${id_address}`,
+        `${process.env.REACT_APP_API_BASE_URL}/user-profile/set-primary-address/${id_address}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -32,7 +32,7 @@ export default userSlice.reducer;
 export function getUserDetails() {
   return async (dispatch) => {
     try {
-      const response = await axios.get("http://localhost:8000/api/users/");
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users/`);
       console.log(response);
       // localStorage.setItem("user_details", JSON.stringify(response.data.data));
     } catch (error) {
@@ -46,7 +46,7 @@ export function registerUser(data, callback) {
     dispatch(setIsLoading(true));
     try {
       let response = await axios.post(
-        "http://localhost:8000/api/users/register",
+        `${process.env.REACT_APP_API_BASE_URL}/users/register`,
         data
       );
       dispatch(setUser(response.data.data));
@@ -73,7 +73,7 @@ export function loginUser(data, callback) {
     dispatch(setIsLoading(true));
     try {
       let response = await axios.post(
-        "http://localhost:8000/api/users/login",
+        `${process.env.REACT_APP_API_BASE_URL}/users/login`,
         data
       );
 
@@ -105,7 +105,7 @@ export function resendEmail(data) {
     dispatch(setIsLoading(true));
     try {
       let response = await axios.post(
-        "http://localhost:8000/api/users/resend-verification",
+        `${process.env.REACT_APP_API_BASE_URL}/users/resend-verification`,
         data
       );
       dispatch(setIsLoading(false));

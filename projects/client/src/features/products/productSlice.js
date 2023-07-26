@@ -53,7 +53,7 @@ export function fetchProducts(page = 1, search = "", sort = "", category = "") {
   return async (dispatch) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/products/?page=${page}&search=${search}&sort=${sort}&category=${category}`
+        `${process.env.REACT_APP_API_BASE_URL}/products/?page=${page}&search=${search}&sort=${sort}&category=${category}`
       );
       const { products, totalPages, itemsPerPage } = response.data;
 
@@ -71,7 +71,7 @@ export function getLatestProducts() {
   return async (dispatch) => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/products/latest_products"
+        `${process.env.REACT_APP_API_BASE_URL}/products/latest_products`
       );
       dispatch(setLatestProducts(response.data));
     } catch (error) {
@@ -84,7 +84,7 @@ export function getProductById(id) {
   return async (dispatch) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/products/product-detail/${id}`
+        `${process.env.REACT_APP_API_BASE_URL}/products/product-detail/${id}`
       );
       dispatch(setProducts(response.data));
     } catch (error) {
@@ -97,7 +97,7 @@ export function getProductByCategory(category, offset, limit, sort, filter) {
   return async (dispatch) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/products/category`,
+        `${process.env.REACT_APP_API_BASE_URL}/products/category`,
         {
           params: {
             offset: offset || 0,

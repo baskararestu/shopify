@@ -12,7 +12,7 @@ function SendOrderModal({ selectedId }) {
   const sendButton = async () => {
     try {
       let response = await axios.post(
-        `http://localhost:8000/api/admins/orders/send?id_order=${selectedId}`
+        `${process.env.REACT_APP_API_BASE_URL}/admins/orders/send?id_order=${selectedId}`
       );
       showSuccessToast(response.data.message);
       dispatch(fetchOrderPaymentList());

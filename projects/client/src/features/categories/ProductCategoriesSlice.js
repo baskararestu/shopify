@@ -44,7 +44,7 @@ export function getAllProductCategories(page = 1, search = "", sort = "") {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await Axios.get(
-        `http://localhost:8000/api/admins/categories/?page=${page}&search=${search}&sort=${sort}`,
+        `${process.env.REACT_APP_API_BASE_URL}/admins/categories/?page=${page}&search=${search}&sort=${sort}`,
         {
           headers: { Authorization: `Bearer ${adminToken}` },
         }

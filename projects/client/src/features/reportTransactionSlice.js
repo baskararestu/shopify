@@ -57,7 +57,7 @@ export const fetchTransactionOnDateRange = (dateRange) => {
       const token = localStorage.admin_token;
       if (token) {
         let response = await Axios.post(
-          `http://localhost:8000/api/admins/transaction-on-range`,
+          `${process.env.REACT_APP_API_BASE_URL}/admins/transaction-on-range`,
           { dateRange },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -77,7 +77,7 @@ export const fetchMonthlyTransactionOnDateRange = (dateRange) => {
       const token = localStorage.admin_token;
       if (token) {
         let response = await Axios.post(
-          `http://localhost:8000/api/admins/transaction-monthly`,
+          `${process.env.REACT_APP_API_BASE_URL}/admins/transaction-monthly`,
           { dateRange },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -97,7 +97,7 @@ export const fetchMonthlyCatTransactionOnDateRange = (dateRange) => {
       const token = localStorage.admin_token;
       if (token) {
         let response = await Axios.post(
-          `http://localhost:8000/api/admins/transaction-monthly-cat`,
+          `${process.env.REACT_APP_API_BASE_URL}/admins/transaction-monthly-cat`,
           { dateRange },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -117,7 +117,7 @@ export const fetchMonthlyProductTransactionOnDateRange = (dateRange) => {
       const token = localStorage.admin_token;
       if (token) {
         let response = await Axios.post(
-          `http://localhost:8000/api/admins/transaction-monthly-product`,
+          `${process.env.REACT_APP_API_BASE_URL}/admins/transaction-monthly-product`,
           { dateRange },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -137,7 +137,7 @@ export const fetchAllMonthlyTransaction = () => {
       const token = localStorage.admin_token;
       if (token) {
         let response = await Axios.get(
-          `http://localhost:8000/api/admins/all-transactions-monthly`,
+          `${process.env.REACT_APP_API_BASE_URL}/admins/all-transactions-monthly`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -156,7 +156,7 @@ export const fetchAllMonthlyCatTransaction = () => {
       const token = localStorage.admin_token;
       if (token) {
         let response = await Axios.get(
-          `http://localhost:8000/api/admins/all-transactions-category-monthly`,
+          `${process.env.REACT_APP_API_BASE_URL}/admins/all-transactions-category-monthly`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -175,7 +175,7 @@ export const fetchAllMonthlyProductTransaction = () => {
       const token = localStorage.admin_token;
       if (token) {
         let response = await Axios.get(
-          `http://localhost:8000/api/admins/all-transactions-product-monthly`,
+          `${process.env.REACT_APP_API_BASE_URL}/admins/all-transactions-product-monthly`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

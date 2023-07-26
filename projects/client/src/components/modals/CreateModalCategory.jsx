@@ -19,7 +19,7 @@ function CreateModalCategory({ disabled }) {
     e.preventDefault();
     try {
       let response = await Axios.post(
-        "http://localhost:8000/api/admins/categories/add",
+        `${process.env.REACT_APP_API_BASE_URL}/admins/categories/add`,
         {
           name,
         }

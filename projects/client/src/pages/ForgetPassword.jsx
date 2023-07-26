@@ -15,7 +15,7 @@ const ForgetPassword = () => {
       setIsLoading(true);
 
       let response = await Axios.post(
-        "http://localhost:8000/api/users/forget-password",
+        `${process.env.REACT_APP_API_BASE_URL}/users/forget-password`,
         values
       );
 

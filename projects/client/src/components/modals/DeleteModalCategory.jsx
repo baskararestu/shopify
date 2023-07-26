@@ -19,7 +19,7 @@ function DeleteModalCategory({ categoryId, categoryName, disabled }) {
     e.preventDefault();
     try {
       let response = await Axios.delete(
-        `http://localhost:8000/api/admins/categories/delete/${categoryId}`
+        `${process.env.REACT_APP_API_BASE_URL}/admins/categories/delete/${categoryId}`
       );
 
       toast(

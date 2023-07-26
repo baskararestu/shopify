@@ -20,7 +20,7 @@ const EditAddressModal = ({
     const fetchProvinces = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/rajaongkir/provinces"
+          `${process.env.REACT_APP_API_BASE_URL}/rajaongkir/provinces`
         ); // Modify the URL to match your backend route for fetching provinces
 
         setProvinces(response.data); // Assuming the response data is an array of provinces
@@ -35,7 +35,7 @@ const EditAddressModal = ({
   const fetchCities = async (provinceId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/rajaongkir/cities/${provinceId}`
+        `${process.env.REACT_APP_API_BASE_URL}/rajaongkir/cities/${provinceId}`
       ); // Modify the URL to match your backend route for fetching cities by province
 
       setCities(response.data); // Assuming the response data is an array of cities

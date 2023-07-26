@@ -43,14 +43,14 @@ function StockReport() {
       if (selectedWarehouse) {
         if (token) {
           let responseRecap = await axios.get(
-            `http://localhost:8000/api/admins/stock-movement-recap/${selectedWarehouse}`,
+            `${process.env.REACT_APP_API_BASE_URL}/admins/stock-movement-recap/${selectedWarehouse}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
           );
 
           let responseDetail = await axios.get(
-            `http://localhost:8000/api/admins/stock-movement-detail/${selectedWarehouse}`,
+            `${process.env.REACT_APP_API_BASE_URL}/admins/stock-movement-detail/${selectedWarehouse}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }

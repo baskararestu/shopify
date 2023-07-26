@@ -22,12 +22,7 @@ const { userProfileRoutes } = require("./routers");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-  cors({
-    origin: process.env.WHITELISTED_DOMAIN,
-    credentials: true,
-  })
-);
+app.use(cors());
 const pathToFile = join(__dirname, "./public");
 app.use(express.json());
 app.use(express.static(pathToFile));
@@ -85,7 +80,7 @@ app.use((err, req, res, next) => {
 //#endregion
 
 //#region CLIENT
-const clientPath = "../../client/public";
+const clientPath = "../../client/build";
 app.use(express.static(join(__dirname, clientPath)));
 
 // Serve the HTML page

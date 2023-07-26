@@ -17,7 +17,7 @@ const Verification = () => {
     try {
       setIsLoading(true);
       let response = await Axios.post(
-        "http://localhost:8000/api/users/verification",
+        `${process.env.REACT_APP_API_BASE_URL}/users/verification`,
         values,
         {
           headers: {

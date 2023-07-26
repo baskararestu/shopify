@@ -38,7 +38,7 @@ function FormProfile() {
       const { first_name, last_name, email } = temp_profile;
       if (token) {
         let response = await axios.post(
-          `http://localhost:8000/api/user-profile/edit-data`,
+          `${process.env.REACT_APP_API_BASE_URL}/user-profile/edit-data`,
           { first_name, last_name, email },
           {
             headers: { Authorization: `Bearer ${token}` },

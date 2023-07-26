@@ -69,21 +69,21 @@ function TransactionReport() {
       if (selectedWarehouse) {
         if (token) {
           let responseMonthly = await axios.get(
-            `http://localhost:8000/api/admins/all-transactions-monthly/${selectedWarehouse}`,
+            `${process.env.REACT_APP_API_BASE_URL}/admins/all-transactions-monthly/${selectedWarehouse}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
           );
 
           let responseMonthlyCat = await axios.get(
-            `http://localhost:8000/api/admins/all-transactions-category-monthly/${selectedWarehouse}`,
+            `${process.env.REACT_APP_API_BASE_URL}/admins/all-transactions-category-monthly/${selectedWarehouse}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
           );
 
           let responseMonthlyProduct = await axios.get(
-            `http://localhost:8000/api/admins/all-transactions-product-monthly/${selectedWarehouse}`,
+            `${process.env.REACT_APP_API_BASE_URL}/admins/all-transactions-product-monthly/${selectedWarehouse}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }

@@ -13,7 +13,7 @@ const AddressSelect = ({
       const token = localStorage.user_token;
       if (token) {
         let response = await axios.get(
-          `http://localhost:8000/api/user-profile/get-address`,
+          `${process.env.REACT_APP_API_BASE_URL}/user-profile/get-address`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

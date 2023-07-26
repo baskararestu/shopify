@@ -15,7 +15,7 @@ export default function AddressModal() {
     const fetchProvinces = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/rajaongkir/provinces"
+          `${process.env.REACT_APP_API_BASE_URL}/rajaongkir/provinces`
         );
         setProvinces(response.data);
       } catch (error) {
@@ -29,7 +29,7 @@ export default function AddressModal() {
   const fetchCities = async (provinceId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/rajaongkir/cities/${provinceId}`
+        `${process.env.REACT_APP_API_BASE_URL}/rajaongkir/cities/${provinceId}`
       );
       setCities(response.data);
     } catch (error) {
@@ -58,7 +58,7 @@ export default function AddressModal() {
     try {
       if (token) {
         let response = await axios.post(
-          `http://localhost:8000/api/user-profile/add-address`,
+          `${process.env.REACT_APP_API_BASE_URL}/user-profile/add-address`,
           newAddressData,
           {
             headers: {

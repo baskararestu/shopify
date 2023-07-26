@@ -26,7 +26,7 @@ export function getAllAdmins() {
       const token = localStorage.admin_token;
       if (token) {
         let response = await axios.get(
-          `http://localhost:8000/api/admins/all-admins`,
+          `${process.env.REACT_APP_API_BASE_URL}/admins/all-admins`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

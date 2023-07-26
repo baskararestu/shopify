@@ -48,7 +48,7 @@ export function fetchOrder(id_user, status, page = 1) {
   return async (dispatch) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/orders/order-list?page=${page}&id_user=${id_user}&status=${status}`
+        `${process.env.REACT_APP_API_BASE_URL}/orders/order-list?page=${page}&id_user=${id_user}&status=${status}`
       );
 
       const { orderItems, totalPages, itemsPerPage } = response.data;
@@ -69,7 +69,7 @@ export function uploadPaymentOrder(orderId, formData) {
       const token = localStorage.getItem("user_token");
 
       const response = await axios.post(
-        `http://localhost:8000/api/orders/upload-payment/${orderId}`,
+        `${process.env.REACT_APP_API_BASE_URL}/orders/upload-payment/${orderId}`,
         formData,
         {
           headers: {
@@ -100,7 +100,7 @@ export function cancelOrder(orderId, id_user, status) {
       const token = localStorage.getItem("user_token");
 
       let response = await axios.put(
-        `http://localhost:8000/api/orders/cancel-order/${orderId}`,
+        `${process.env.REACT_APP_API_BASE_URL}/orders/cancel-order/${orderId}`,
         null,
         {
           headers: {
@@ -128,7 +128,7 @@ export function checkUserOrders() {
   return async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/status-orders/"
+        `${process.env.REACT_APP_API_BASE_URL}/status-orders/`
       );
     } catch (error) {
       console.log(error);
@@ -141,7 +141,7 @@ export function changeStatusToPesananDiterima(id_order) {
     const token = localStorage.getItem("user_token");
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/status-orders/",
+        `${process.env.REACT_APP_API_BASE_URL}/status-orders/`,
         { id_order },
         {
           headers: {

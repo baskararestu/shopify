@@ -52,7 +52,7 @@ const CreateOrder = () => {
         })),
       };
       let response = await axios.post(
-        "http://localhost:8000/api/orders/create",
+        `${process.env.REACT_APP_API_BASE_URL}/orders/create`,
         orderData
       );
 
@@ -76,7 +76,7 @@ const CreateOrder = () => {
     try {
       setShipping(0);
       let response = await axios.get(
-        `http://localhost:8000/api/orders/shipping-warehouse?id_user=${id_user}&courier=${courier}&id_address=${selectedAddress}`
+        `${process.env.REACT_APP_API_BASE_URL}/orders/shipping-warehouse?id_user=${id_user}&courier=${courier}&id_address=${selectedAddress}`
       );
       const { service, warehouse } = response.data;
       setShippingOptions(service);

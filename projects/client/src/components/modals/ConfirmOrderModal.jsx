@@ -12,7 +12,7 @@ function ConfirmOrderModal({ selectedId }) {
   const confirmButton = async () => {
     try {
       let response = await axios.post(
-        `http://localhost:8000/api/admins/orders/payment/confirm?id_order=${selectedId}`
+        `${process.env.REACT_APP_API_BASE_URL}/admins/orders/payment/confirm?id_order=${selectedId}`
       );
       dispatch(fetchOrderPaymentList());
       showSuccessToast(response.data.message);

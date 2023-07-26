@@ -51,7 +51,7 @@ function AddressCard() {
 
       if (token) {
         let response = await axios.post(
-          `http://localhost:8000/api/user-profile/edit-address/${id_address}`,
+          `${process.env.REACT_APP_API_BASE_URL}/user-profile/edit-address/${id_address}`,
           editedAddress,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -68,7 +68,7 @@ function AddressCard() {
       const token = localStorage.user_token;
       if (token) {
         let response = await axios.delete(
-          `http://localhost:8000/api/user-profile/delete-address/${id_address}`,
+          `${process.env.REACT_APP_API_BASE_URL}/user-profile/delete-address/${id_address}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

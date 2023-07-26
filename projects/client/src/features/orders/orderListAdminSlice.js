@@ -40,7 +40,7 @@ export function fetchOrderPaymentList(
 
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/admins/orders?page=${page}&search=${search}&sort=${sort}&status=${status}`,
+        `${process.env.REACT_APP_API_BASE_URL}/admins/orders?page=${page}&search=${search}&sort=${sort}&status=${status}`,
         {
           headers: {
             Authorization: `Bearer ${adminToken}`,

@@ -60,7 +60,7 @@ export function fetchWarehouses(page = 1, search = "", sort = "") {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/warehouses?page=${page}&search=${search}&sort=${sort}`,
+        `${process.env.REACT_APP_API_BASE_URL}/warehouses?page=${page}&search=${search}&sort=${sort}`,
         {
           headers: { Authorization: `Bearer ${adminToken}` },
         }
@@ -82,7 +82,7 @@ export function fetchAllWarehouseData() {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/warehouses/data",
+        `${process.env.REACT_APP_API_BASE_URL}/warehouses/data`,
         { headers: { Authorization: `Bearer ${adminToken}` } }
       );
       dispatch(setWarehouse(response.data.data));
@@ -98,7 +98,7 @@ export function deleteWarehouse(id_warehouse) {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.delete(
-        `http://localhost:8000/api/warehouses/${id_warehouse}`,
+        `${process.env.REACT_APP_API_BASE_URL}/warehouses/${id_warehouse}`,
         {
           headers: { Authorization: `Bearer ${adminToken}` },
         }
@@ -117,7 +117,7 @@ export function editWarehouse(id_warehouse, updatedWarehouse) {
     const adminToken = localStorage.getItem("admin_token");
     try {
       let response = await axios.put(
-        `http://localhost:8000/api/warehouses/${id_warehouse}`,
+        `${process.env.REACT_APP_API_BASE_URL}/warehouses/${id_warehouse}`,
         updatedWarehouse,
         {
           headers: { Authorization: `Bearer ${adminToken}` },
@@ -139,7 +139,7 @@ export function createWarehouse(warehouseData) {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/warehouses",
+        `${process.env.REACT_APP_API_BASE_URL}/warehouses`,
         warehouseData,
         {
           headers: { Authorization: `Bearer ${adminToken}` },

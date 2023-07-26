@@ -27,7 +27,7 @@ export function getProfile() {
       const token = localStorage.user_token;
       if (token) {
         let response = await Axios.get(
-          `http://localhost:8000/api/user-profile/`,
+          `${process.env.REACT_APP_API_BASE_URL}/user-profile/`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -45,7 +45,7 @@ export function addProfilePic(data) {
     const userToken = localStorage.getItem("user_token");
     try {
       const response = await Axios.post(
-        "http://localhost:8000/api/user-profile/upload",
+        `${process.env.REACT_APP_API_BASE_URL}/user-profile/upload`,
         data,
         {
           headers: { Authorization: `Bearer ${userToken}` },

@@ -14,7 +14,7 @@ function CancelOrderModalAdmin({ selectedId }) {
   const cancelButton = async () => {
     try {
       let response = await axios.post(
-        `http://localhost:8000/api/admins/orders/cancel?id_order=${selectedId}`
+        `${process.env.REACT_APP_API_BASE_URL}/admins/orders/cancel?id_order=${selectedId}`
       );
       console.log(response);
       showInfoToast(response.data.message);

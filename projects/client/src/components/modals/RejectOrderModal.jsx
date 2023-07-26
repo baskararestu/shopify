@@ -14,7 +14,7 @@ function RejectOrderModal({ selectedId }) {
   const rejectButton = async () => {
     try {
       let response = await axios.post(
-        `http://localhost:8000/api/admins/orders/payment/reject?id_order=${selectedId}`
+        `${process.env.REACT_APP_API_BASE_URL}/admins/orders/payment/reject?id_order=${selectedId}`
       );
       dispatch(fetchOrderPaymentList());
       showInfoToast(response.data.message);

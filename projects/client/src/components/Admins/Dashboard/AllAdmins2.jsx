@@ -38,7 +38,7 @@ function AllAdminList() {
       const token = localStorage.admin_token;
       if (token) {
         let response = await Axios.post(
-          "http://localhost:8000/api/admins/warehouse-admin",
+          `${process.env.REACT_APP_API_BASE_URL}/admins/warehouse-admin`,
           { name, email, password },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -63,7 +63,7 @@ function AllAdminList() {
       const token = localStorage.admin_token;
       if (token) {
         let response = await Axios.post(
-          `http://localhost:8000/api/admins/edit-admin/${id}`,
+          `${process.env.REACT_APP_API_BASE_URL}/admins/edit-admin/${id}`,
           { name },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -92,7 +92,7 @@ function AllAdminList() {
       const token = localStorage.admin_token;
       if (token) {
         let response = await Axios.post(
-          `http://localhost:8000/api/admins/assign-admin/${id}`,
+          `${process.env.REACT_APP_API_BASE_URL}/admins/assign-admin/${id}`,
           { warehouse_name },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -115,7 +115,7 @@ function AllAdminList() {
     try {
       const token = localStorage.admin_token;
       let response = await Axios.delete(
-        `http://localhost:8000/api/admins/delete-admin/${id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/admins/delete-admin/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

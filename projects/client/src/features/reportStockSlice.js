@@ -34,7 +34,7 @@ export function fetchStockMovementRecap() {
 
     try {
       const response = await Axios.get(
-        `http://localhost:8000/api/admins/stock-movement-recap`,
+        `${process.env.REACT_APP_API_BASE_URL}/admins/stock-movement-recap`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -53,7 +53,7 @@ export function fetchStockMovementDetail() {
 
     try {
       const response = await Axios.get(
-        `http://localhost:8000/api/admins/stock-movement-detail`,
+        `${process.env.REACT_APP_API_BASE_URL}/admins/stock-movement-detail`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

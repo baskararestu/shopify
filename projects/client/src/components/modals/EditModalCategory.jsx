@@ -19,7 +19,7 @@ function EditModalCategory({ categoryId, categoryName, disabled }) {
     e.preventDefault();
     try {
       let response = await Axios.patch(
-        "http://localhost:8000/api/admins/categories/update",
+        `${process.env.REACT_APP_API_BASE_URL}/admins/categories/update`,
         {
           name,
           id: categoryId,

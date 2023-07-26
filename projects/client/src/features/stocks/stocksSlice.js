@@ -64,7 +64,7 @@ export function fetchStockData(page = 1, search = "", sort = "") {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/stocks/?page=${page}&search=${search}&sort=${sort}`,
+        `${process.env.REACT_APP_API_BASE_URL}/stocks/?page=${page}&search=${search}&sort=${sort}`,
         {
           headers: { Authorization: `Bearer ${adminToken}` },
         }
@@ -86,7 +86,7 @@ export function addNewStock(idWarehouse, idProduct, quantity) {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/stocks",
+        `${process.env.REACT_APP_API_BASE_URL}/stocks`,
         {
           id_warehouse: idWarehouse,
           id_product: idProduct,
@@ -112,7 +112,7 @@ export function updateStockData(stockId, quantity, status) {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/stocks/`,
+        `${process.env.REACT_APP_API_BASE_URL}/stocks/`,
         {
           id_stock: stockId,
           quantity: quantity,
@@ -140,7 +140,7 @@ export function deleteStockData(id_stock) {
     const adminToken = localStorage.getItem("admin_token");
     try {
       const response = await axios.delete(
-        `http://localhost:8000/api/stocks?id_stock=${id_stock}`,
+        `${process.env.REACT_APP_API_BASE_URL}/stocks?id_stock=${id_stock}`,
         {
           headers: { Authorization: `Bearer ${adminToken}` },
         }
