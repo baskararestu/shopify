@@ -46,7 +46,7 @@ function ReceiptModal({ order }) {
             <p>Bank Name: {order.bank_name}</p>
             <p>Account Number: {order.account_number}</p>
             <img
-              src={`http://localhost:8000${order.payment_proof}`}
+              src={`${process.env.REACT_APP_API_IMG_URL}${order.payment_proof}`}
               alt="Payment Proof"
               className="py-4"
             />

@@ -27,7 +27,7 @@ function ImageProfileUploader() {
     <div>
       <img
         className="w-[300px] h-[200px] object-cover p-2"
-        src={`http://localhost:8000/${existing_profile.image_path}`}
+        src={`${process.env.REACT_APP_API_IMG_URL}/${existing_profile.image_path}`}
         alt="img"
       />
 

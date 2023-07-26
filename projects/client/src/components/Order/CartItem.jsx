@@ -6,7 +6,7 @@ const CartItem = ({ item }) => {
       <div className="bg-base-100 mb-4 rounded-lg shadow-lg p-4">
         <div className="hero-content justify-start lg:w-[600px]">
           <img
-            src={`http://localhost:8000/${item.image_url}`}
+            src={`${process.env.REACT_APP_API_IMG_URL}/${item.image_url}`}
             alt="item cart"
             className="w-[100px] lg:w-[100px] rounded-lg shadow-2xl"
           />

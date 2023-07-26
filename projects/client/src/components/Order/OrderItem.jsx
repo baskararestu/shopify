@@ -43,7 +43,7 @@ const OrderItem = ({
             className="hero-content justify-start sm:w-auto flex items-center"
           >
             <img
-              src={`http://localhost:8000/${product.product_image}`}
+              src={`${process.env.REACT_APP_API_IMG_URL}/${product.product_image}`}
               alt={product.product_name}
               className="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px] rounded-lg shadow-2xl"
             />

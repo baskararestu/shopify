@@ -14,7 +14,7 @@ function ProductCard(props) {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
-  const imageSrc = `http://localhost:8000${product.image_url}`;
+  const imageSrc = `${process.env.REACT_APP_API_IMG_URL}${product.image_url}`;
 
   return (
     <div className="card bg-white w-[160px] lg:w-[250px] m-2 rounded-lg shadow-lg">

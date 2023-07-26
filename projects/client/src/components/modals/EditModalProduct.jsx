@@ -31,7 +31,7 @@ const EditModalProduct = ({
       setCategory(selectedProduct.id_category);
       setDescription(selectedProduct.description);
       setImage(selectedProduct.image_url);
-      setImagePreview(`http://localhost:8000${selectedProduct.image_url}`); // Set initial image preview
+      setImagePreview(`${process.env.REACT_APP_API_IMG_URL}${selectedProduct.image_url}`); // Set initial image preview
     }
   }, [editItemId, products]);
 

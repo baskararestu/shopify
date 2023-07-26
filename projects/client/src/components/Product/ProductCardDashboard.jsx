@@ -17,7 +17,7 @@ function ProductCardDashboard(props) {
       })
     : "Price not available";
 
-  const imageSrc = `http://localhost:8000${product.image_url}`;
+  const imageSrc = `${process.env.REACT_APP_API_IMG_URL}${product.image_url}`;
 
   return (
     <div className="card bg-base-200 w-auto lg:w-auto h-auto m-2 rounded-lg shadow-lg flex flex-col justify-center items-center">

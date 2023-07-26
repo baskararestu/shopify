@@ -43,7 +43,7 @@ const UserDropdown = ({ user }) => {
         <label tabIndex={0} className="btn btn-ghost btn-circle avatar ml-1.5">
           <div className="w-10 rounded-full">
             <img
-              src={`http://localhost:8000/${existing_profile.image_path}`}
+              src={`${process.env.REACT_APP_API_IMG_URL}/${existing_profile.image_path}`}
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src =

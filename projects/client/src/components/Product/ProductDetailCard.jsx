@@ -2,7 +2,7 @@ import React from "react";
 import AddToCartButton from "./AddToCartButton";
 
 const ProductDetailCard = ({ product }) => {
-  const imageSrc = `http://localhost:8000${product?.image_url}`;
+  const imageSrc = `${process.env.REACT_APP_API_IMG_URL}${product?.image_url}`;
 
   const formattedPrice = product?.price
     ? product.price.toLocaleString("id-ID", {

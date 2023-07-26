@@ -4,7 +4,7 @@ function CartItemsCard({ item, formattedPrice }) {
   return (
     <div className="flex flex-row items-center gap-5">
       <img
-        src={`http://localhost:8000/${item.image_url}`}
+        src={`${process.env.REACT_APP_API_IMG_URL}/${item.image_url}`}
         alt={item.name}
         className="w-24 h-24 lg:w-36 lg:h-36 object-cover mr-2"
       />

@@ -37,7 +37,7 @@ function CartDropdownContent({ cartItems }) {
               }}
             >
               <img
-                src={`http://localhost:8000/${item.image_url}`}
+                src={`${process.env.REACT_APP_API_IMG_URL}/${item.image_url}`}
                 alt={item.name}
                 className="w-12 h-12 mr-2"
               />
