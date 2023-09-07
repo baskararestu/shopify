@@ -5,7 +5,7 @@ import Carousel from "./Carousel";
 function Header() {
   return (
     <div className="mx-auto">
-      <div className=" flex flex-col justify-center">
+      <div className=" flex flex-col justify-center pb-5 gap-5">
         <div>
           <Carousel />
         </div>
