@@ -12,11 +12,11 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          primary: "#dd8e5d",
+          primary: "#23A6F0",
 
           secondary: "#61d3b5",
 
-          accent: "#3df4e5",
+          accent: "#2DC071",
 
           neutral: "#332833",
 
@@ -29,9 +29,10 @@ module.exports = {
           warning: "#ae7209",
 
           error: "#ed1d5e",
+          textBlack: "#252B42",
         },
       },
     ],
   },
-  plugins: [require("daisyui"), require('@tailwindcss/forms'),],
+  plugins: [require("daisyui"), require("@tailwindcss/forms")],
 };
